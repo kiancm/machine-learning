@@ -1,0 +1,6 @@
+{
+  "python.jediEnabled": false,
+  "python.linting.pylintEnabled": true,
+  "python.linting.enabled": true,
+  "python.pythonPath": "C:\\Users\\kianm\\AppData\\Local\\Programs\\Python\\Python37\\python.exe"
+}
