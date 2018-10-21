@@ -32,25 +32,3 @@ class Learner(abc.ABC):
     @abc.abstractmethod
     def predict(self, X):
         pass
-
-
-class Regressor(Learner):
-    def error(self, h, y):
-        return 1/(2*len(h)) * np.sum((h-y)**2)
-
-    def normal(self, X, y):
-        return np.linalg.inv(X.T.dot(X)).dot(X.T).dot(y)
-
-    def predict(self, X):
-        return np.inner(self.theta, X)
-
-
-class Classifier(Learner):
-    def error(self, h, y):
-        return -1/len(h) * np.sum(np.dot(y, np.log(h)) - np.dot((1-y), np.log(1-h)))
-
-    def sigmoid(self, z):
-        return 1 / (1+np.exp(-z))
-
-    def predict(self, X):
-      2  return self.sigmoid(np.inner(self.theta, X))
