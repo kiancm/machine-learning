@@ -4,10 +4,11 @@ import random
 import numpy as np
 
 class Learner(abc.ABC):
-    def __init__(self, batch_size=1, epochs=30, features=1):
+    def __init__(self, batch_size=1, epochs=30, features=1, _lambda=0):
         self.theta = np.ones(features + 1)
         self.batch_size = batch_size
         self.epochs = epochs
+        self._lambda = _lambda
 
     def sgd(self, X, y, alpha=.01):
         # X = np.concatenate((np.ones((len(X), 1)), X), axis=1)
@@ -23,7 +24,7 @@ class Learner(abc.ABC):
                 print(f'error: {error} | theta: {self.theta}')
 
     def _error_grad(self, h, X, y):
-        return 1/len(h) * np.dot((h-y), X)
+        return 1/len(h) * np.dot((h-y), X) + 2*self._lambda*self.theta
 
     @abc.abstractmethod
     def error(self, h, y):

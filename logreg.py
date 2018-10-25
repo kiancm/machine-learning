@@ -15,14 +15,13 @@ class LogisticRegressor(learner.Learner):
 
 X = np.random.rand(2000, 4)
 X = np.concatenate((np.ones((len(X), 1)), X), axis=1)
-# y = np.inner([1, 2, 3, 4, 5], X)
-y = (np.inner([-5, 1, 2, 3, 4], X) >= 0).astype(int)
+y = (np.inner([4, 1, 2, 3, 4], X) >= 0).astype(int)
 reg = LogisticRegressor(
     features=4,
     batch_size=100,
     epochs=30,
+    _lambda=0
 )
 reg.sgd(X, y, alpha=.25)
 
 print(f'\ntheta: {reg.theta}')
-# print(reg.normal(X, y))`
