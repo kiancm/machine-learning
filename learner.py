@@ -18,11 +18,9 @@ class SGD:
             for b_X, b_y in batches:
                 h = self.model.predict(b_X)
                 error = self.model.error(h, b_y, _lambda)
-                self.model.theta -= alpha * self._error_grad(h, b_X, b_y, self.model.theta, _lambda)
+                self.model.theta -= alpha * self.model.error_grad(h, b_X, b_y, _lambda)
                 print(f'error: {error} | theta: {self.model.theta}')
 
-    def _error_grad(self, h, X, y, theta, _lambda):
-        return 1/len(h) * np.dot((h-y), X) + 2*_lambda*theta
 
 
 class Model(abc.ABC):
@@ -53,10 +51,13 @@ class LinearRegressor(Model):
     def predict(self, X):
         return np.inner(self.theta, X)
 
+    def error_grad(self, h, X, y, _lambda):
+        return 1/len(h) * np.dot((h-y), X) + 2*_lambda*self.theta
+
 
 class LogisticRegressor(Model):
-    def error(self, h, y):
-        return -1/len(h) * np.sum(np.dot(y, np.log(h)) - np.dot((1-y), np.log(1-h)))
+    def error(self, X, y, _lambda):
+        return -1/len(h) * np.sum(np.dot(y, np.log(h)) - np.dot((1-y), np.log(1-h))) + _lambda*np.sum(self.theta)
 
     def sigmoid(self, z):
         return 1 / (1+np.exp(-z))
@@ -64,14 +65,17 @@ class LogisticRegressor(Model):
     def predict(self, X):
         return self.sigmoid(np.inner(self.theta, X))
 
+    def error_grad(self, h, X, y, _lambda):
+        return 1/len(h) * np.dot((h-y), X) + 2*_lambda*self.theta
 
-X = np.random.rand(2000, 4)
+
+X = np.random.randn(2000, 4)
 X = np.concatenate((np.ones((len(X), 1)), X), axis=1)
-y = (np.inner([1, 2, 3, 4, 5], X))
-reg = LinearRegressor(
+y = (np.inner([1, 2, 3, 4, 5], X) >= 0)
+reg = LogisticRegressor(
     features=4,
 )
-reg.fit(X, y, alpha=.25, batch_size=100)
+reg.fit(X, y, alpha=.25, batch_size=10)
 
 print(f'\ntheta: {reg.theta}')
     # print(reg.normal(X, y))`
