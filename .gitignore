@@ -1,2 +1,2 @@
-# VSCode Workspace Files
-*.code-workspace
+**/.vscode
+**/__pycache__
